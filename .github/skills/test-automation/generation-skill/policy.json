@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TestGenerationPolicy",
+  "type": "object",
+  "properties": {
+    "framework": { "type": "string", "default": "@playwright/test" },
+    "language": { "type": "string", "default": "typescript" },
+    "usePageObjects": { "type": "boolean", "default": true },
+    "forbiddenMethods": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["waitForTimeout", "waitForSelector"]
+    },
+    "locatorPriority": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["getByRole", "getByTestId", "getByLabel", "getByPlaceholder", "getByText"]
+    }
+  },
+  "required": ["framework", "language", "usePageObjects"]
+}

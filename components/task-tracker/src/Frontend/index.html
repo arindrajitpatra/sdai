@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simple Task Tracker Application - Single-page productivity dashboard with real-time filtering, client-side validation, and accessible keyboard support.">
+    <title>Simple Task Tracker</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Storage Warning Banner (BR-08, EC-09) -->
+    <div id="storage-banner" class="storage-banner hidden" role="alert" aria-live="polite">
+        <div class="banner-content">
+            <span class="banner-icon">⚠️</span>
+            <span class="banner-text">Local storage unavailable. Tasks will only persist during the current browser session.</span>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div class="app-container">
+        <!-- Dashboard Header & Stats -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-logo">✓</div>
+                <div>
+                    <h1 class="app-title">Simple Task Tracker</h1>
+                    <p class="app-subtitle">Streamline your daily action items & priorities</p>
+                </div>
+            </div>
+            
+            <div class="task-stats-bar" aria-label="Task Summary Statistics">
+                <div class="stat-pill">
+                    <span class="stat-label">Total</span>
+                    <span id="stat-total" class="stat-value">0</span>
+                </div>
+                <div class="stat-pill pending">
+                    <span class="stat-label">Pending</span>
+                    <span id="stat-pending" class="stat-value">0</span>
+                </div>
+                <div class="stat-pill completed">
+                    <span class="stat-label">Completed</span>
+                    <span id="stat-completed" class="stat-value">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Layout Grid -->
+        <main class="dashboard-grid">
+            <!-- Sidebar / Task Creation Form Panel -->
+            <section class="form-panel-card" aria-labelledby="form-heading">
+                <h2 id="form-heading" class="panel-heading">Create New Task</h2>
+                
+                <form id="create-task-form" class="task-form" novalidate>
+                    <!-- Task Title Input -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="task-title-input" class="form-label">Task Title <span class="required">*</span></label>
+                            <span id="title-char-counter" class="char-counter">0/50</span>
+                        </div>
+                        <input type="text" id="task-title-input" name="title" class="form-input" 
+                               placeholder="e.g. Submit Q4 Budget Report" maxlength="50" required 
+                               aria-describedby="title-error title-char-counter">
+                        <div id="title-error" class="inline-error hidden" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <!-- Description Textarea -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="task-desc-input" class="form-label">Description <span class="optional">(optional)</span></label>
+                            <span id="desc-char-counter" class="char-counter">0/500</span>
+                        </div>
+                        <textarea id="task-desc-input" name="description" class="form-textarea" rows="3" 
+                                  placeholder="Add additional details or notes..." maxlength="500" 
+                                  aria-describedby="desc-error desc-char-counter"></textarea>
+                        <div id="desc-error" class="inline-error hidden" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <!-- Priority & Due Date Row -->
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="task-priority-select" class="form-label">Priority</label>
+                            <select id="task-priority-select" name="priority" class="form-select">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group half">
+                            <label for="task-duedate-input" class="form-label">Due Date <span class="required">*</span></label>
+                            <input type="date" id="task-duedate-input" name="dueDate" class="form-input" required 
+                                   aria-describedby="date-error">
+                            <div id="date-error" class="inline-error hidden" role="alert" aria-live="polite"></div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submit-task-btn" class="btn btn-primary btn-block">
+                        <span class="btn-spinner hidden" aria-hidden="true"></span>
+                        <span class="btn-text">+ Add Task</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Task Workspace Panel -->
+            <section class="tasks-workspace-panel" aria-labelledby="tasks-heading">
+                <h2 id="tasks-heading" class="sr-only">Task List Workspace</h2>
+                
+                <!-- Filter & Search Toolbar -->
+                <div class="filter-toolbar">
+                    <div class="search-box-wrapper">
+                        <span class="search-icon" aria-hidden="true">🔍</span>
+                        <input type="search" id="task-search-input" class="search-input" 
+                               placeholder="Search tasks by title..." 
+                               aria-label="Search tasks by title">
+                    </div>
+
+                    <div class="filter-tabs" role="tablist" aria-label="Status Filters">
+                        <button type="button" id="tab-all" class="tab-btn active" role="tab" aria-selected="true" data-filter="All">All</button>
+                        <button type="button" id="tab-pending" class="tab-btn" role="tab" aria-selected="false" data-filter="Pending">Pending</button>
+                        <button type="button" id="tab-completed" class="tab-btn" role="tab" aria-selected="false" data-filter="Completed">Completed</button>
+                    </div>
+                </div>
+
+                <!-- Active Task List Container -->
+                <div id="task-list-container" class="task-list-grid" aria-live="polite">
+                    <!-- Task cards rendered dynamically -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirmation Toast Component -->
+    <div id="toast-notification" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <!-- WCAG 2.1 AA Accessible Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">Delete Task Confirmation</h3>
+                <button type="button" id="modal-close-x" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-desc">Are you sure you want to permanently delete this task? This action cannot be undone.</p>
+                <div id="modal-task-preview" class="modal-task-preview"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modal-cancel-btn" class="btn btn-secondary">Cancel (Esc)</button>
+                <button type="button" id="modal-confirm-btn" class="btn btn-danger">Confirm Delete (Enter)</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

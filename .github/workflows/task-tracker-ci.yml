@@ -1,0 +1,52 @@
+name: Task Tracker ASDLC CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "test-branch1", "**" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build & Run Verification Suites
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore Dependencies
+        run: dotnet restore components/task-tracker/TaskTracker.slnx
+
+      - name: Build Backend Solution
+        run: dotnet build components/task-tracker/TaskTracker.slnx --configuration Release --no-restore
+
+      - name: Run Backend Unit Tests (xUnit)
+        run: dotnet test components/task-tracker/tests/Unit/Backend/TaskTracker.Tests.csproj --configuration Release --no-build --verbosity normal
+
+      - name: Run Frontend Unit Tests (Node.js)
+        run: node --test components/task-tracker/tests/Unit/Frontend/validator.test.js components/task-tracker/tests/Unit/Frontend/regex.test.js
+
+      - name: Upload ASDLC Verification Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asdlc-verification-reports
+          path: |
+            components/task-tracker/code-verification-report.md
+            components/task-tracker/self-healing-pr-report.md
+            components/task-tracker/behavior.md
+            components/task-tracker/tech-spec.md

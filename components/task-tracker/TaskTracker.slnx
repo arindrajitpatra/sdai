@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Backend/">
+    <Project Path="src/Backend/TaskTracker.Backend.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Unit/" />
+  <Folder Name="/tests/Unit/Backend/">
+    <Project Path="tests/Unit/Backend/TaskTracker.Tests.csproj" />
+  </Folder>
+</Solution>

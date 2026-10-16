@@ -1,0 +1,41 @@
+# Build & Binary Outputs
+[Bb]in/
+[Oo]bj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+apphost.exe
+
+# Visual Studio & IDE Caches
+.vs/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Node & Package Managers
+node_modules/
+jspm_packages/
+.npm
+.eslintcache
+
+# Playwright & Test Results
+test-results/
+playwright-report/
+blob-report/
+playwright/.auth/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Temporary Agent Files
+scratch/

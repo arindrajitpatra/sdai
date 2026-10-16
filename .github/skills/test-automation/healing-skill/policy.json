@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TestHealingPolicy",
+  "type": "object",
+  "properties": {
+    "maxHealingAttempts": { "type": "integer", "default": 3 },
+    "allowSelectorFallback": { "type": "boolean", "default": true },
+    "autoCommitFix": { "type": "boolean", "default": true },
+    "healingReportFormat": { "type": "string", "default": "markdown" }
+  },
+  "required": ["maxHealingAttempts", "autoCommitFix"]
+}
